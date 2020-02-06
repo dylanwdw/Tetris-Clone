@@ -1,0 +1,1 @@
+How To Play: The game starts as soon as you run the program. You can move the tetromino using your left and right arrow keys. To rotate the tetromino, use the up-arrow key. Once you've got your tetromino in it's desired position, you can use the down-arrow key to make it fall faster. Fill up entire rows to increase your score. Enjoy!
