@@ -1,31 +1,34 @@
 import java.awt.*;
 import java.awt.image.BufferStrategy;
-
+/*
+ * This class is responsible for all of the graphics.
+ * Contains a thread that repeatedly updates the graphics
+ */
 public class Game implements Runnable
 {
-	private static Display display;
+	private static Display display; //the container in which the graphics are drawn
 	private Thread thread;
 	private boolean isRunning = false; //keeps track of the state of the thread
 	
 	private BufferStrategy bs;
-	private Graphics g;
+	private Graphics g; //graphics object used
 	
 	private GameBoard gameBoard;
 	private Color[] colors = new Color[] {Color.CYAN, Color.YELLOW, Color.MAGENTA, Color.GREEN, Color.RED, Color.BLUE, Color.ORANGE}; //all the colors for the tetrominoes
-	private Font font = new Font("Dialog", Font.PLAIN, 19);
+	private Font font = new Font("Dialog", Font.PLAIN, 19); //some fonts I like
 	private Font font2 = new Font("Dialog", Font.PLAIN, 25);
 	
 	//All of these  values can be changed, but they must be divisible by 10.
-	public static int fps = 300;
+	public static int fps = 300; //can be changed if needed
 	public static int width = 450;
-	public static int height = width*2;
-	public static final int blockWidth = width/10;
+	public static int height = width*2; 
+	public static final int blockWidth = width/10; //the size of each block
 
 	public void init()
 	{
-		display = new Display(450, 900);
-		gameBoard = new GameBoard();
-		display.getFrame().addKeyListener(gameBoard.getKeyManager());
+		display = new Display(width, height);
+		gameBoard = new GameBoard(); 
+		display.getFrame().addKeyListener(gameBoard.getKeyManager()); //allows the display to detect key presses
 	}
 	
 	//updates the games graphics, repeatedly called by thread
@@ -34,14 +37,14 @@ public class Game implements Runnable
 		bs = display.getFrame().getBufferStrategy();
 		if(bs == null)
 		{
-			display.getFrame().createBufferStrategy(3);
+			display.getFrame().createBufferStrategy(3); //creates a buffer strategy if it didn't already have one
 			return;
 		}
+		
 		g = bs.getDrawGraphics();
-		g.clearRect(0, 0, width+250, height);
-		g.setColor(Color.BLACK);
+		g.clearRect(0, 0, width+250, height); //clears the graphics so they can be redrawn 
+		g.setColor(Color.BLACK); //background color - black adds the most contrast
 		g.fillRect(0, 0, width, height); //this is the background of the game
-		g.setColor(Color.RED);
 		
 		for(int i = 2; i <= 21; i++)
 		{
@@ -83,24 +86,24 @@ public class Game implements Runnable
 		}
 		g.setColor(Color.WHITE);
 		g.setFont(font);
-		g.drawString("CURRENT SCORE: " + gameBoard.getScore(), 457, 65);
+		g.drawString("CURRENT SCORE: " + gameBoard.getScore(), 457, 65); //displays the current score on the top right
 		g.setFont(font2);
-		g.drawString("NEXT:", 535, 290);
-		bs.show();
+		g.drawString("NEXT:", 535, 290); //displays "Next" above the future pieces
+		bs.show(); //makes the graphics visible
 		g.dispose();
 	}
 
 	@Override
-	public void run()
+	public void run() 
 	{
-		double timePerTick = 1000000000/fps;
+		double timePerTick = 1000000000/fps; //how frequently this method calls other methods
 		double delta = 0;
 		long now;
-		long lastTime = System.nanoTime();
+		long lastTime = System.nanoTime(); //stores the current time
 		init();
 		while(isRunning)
 		{
-			now = System.nanoTime();
+			now = System.nanoTime(); //stores the current time
 			delta += (now - lastTime)/timePerTick;
 			lastTime = now;
 			if(delta >= 1)
